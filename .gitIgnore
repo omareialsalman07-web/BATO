@@ -74,6 +74,10 @@ Saved/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
+# Clang
+compile_commands.json
+.clangd
+
 # Cache files for the editor to use
 DerivedDataCache/*
 
