@@ -7,6 +7,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "BATO/Componets/CombatComponent.h"
 
 ABato_Character::ABato_Character()
 {
@@ -37,6 +38,9 @@ ABato_Character::ABato_Character()
 	GetMesh()->bOnlyOwnerSee = false;
 	GetMesh()->bOwnerNoSee = true;
 	GetMesh()->bReceivesDecals = false;
+
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>("CombatComponent");
+	CombatComponent->SetIsReplicated(true);
 }
 
 void ABato_Character::BeginPlay()

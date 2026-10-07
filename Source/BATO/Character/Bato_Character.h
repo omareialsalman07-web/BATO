@@ -8,6 +8,8 @@
 #include "UObject/ObjectPtr.h"
 #include "Bato_Character.generated.h"
 
+class UCombatComponent;
+
 UCLASS()
 class BATO_API ABato_Character : public ACharacter
 {
@@ -31,4 +33,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)	
 	TObjectPtr<class UCameraComponent> FirstPersonCamera;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCombatComponent> CombatComponent;
 };
