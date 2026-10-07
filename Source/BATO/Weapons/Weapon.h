@@ -5,6 +5,8 @@
 
 #include "UObject/ObjectMacros.h"
 #include "UObject/ObjectPtr.h"
+#include "WeaponType.h"
+
 #include "Weapon.generated.h"
 
 class USkeletalMeshComponent;
@@ -21,6 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere)
+	EWeaponType WeaponType;
 private:
 	
 	UPROPERTY(VisibleAnywhere)
@@ -28,5 +32,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Mesh3P;
+
+public:
+	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	USkeletalMeshComponent* GetMesh3P() const { return Mesh3P; }
 
 };
