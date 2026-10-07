@@ -6,10 +6,13 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABato_Character::ABato_Character()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCharacterMovement()->MovementState.bCanCrouch = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArm->SetupAttachment(GetRootComponent());
@@ -51,5 +54,4 @@ void ABato_Character::Tick(float DeltaTime)
 void ABato_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
