@@ -45,6 +45,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> SprintAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> FireWeaponAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> AimWeaponAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> CycleAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ReloadAction;
+
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_Jump();
@@ -52,4 +64,12 @@ protected:
 	void Input_SprintStart();
 	void Input_SprintEnd();
 
+	void Input_Fire_Weapon_Pressed();
+	void Input_Fire_Weapon_Released();
+
+	void Input_Aim_Weapon_Pressed();
+	void Input_Aim_Weapon_Released();
+
+	void Input_Cycle_Weapon_Pressed();
+	void Input_Reload_Weapon_Pressed();
 };

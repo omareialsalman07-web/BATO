@@ -21,7 +21,13 @@ protected:
 	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-private:	
+public:	
+	void Initial_Fire_Weapon_Pressed();
+	void Initial_Fire_Weapon_Released();
 
-	
+	void Initial_Aim_Weapon_Pressed();
+	void Initial_Aim_Weapon_Released();
+
+	void Initial_Cycle_Weapon_Pressed();
+	void Initial_Reload_Weapon_Pressed();
 };

@@ -49,13 +49,44 @@ void ABato_Character::BeginPlay()
 	
 }
 
+
 void ABato_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 void ABato_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+	
+void ABato_Character::Input_Fire_Weapon_Pressed()
+{
+	CombatComponent->Initial_Fire_Weapon_Pressed();
+}
+
+void ABato_Character::Input_Fire_Weapon_Released()
+{
+	CombatComponent->Initial_Fire_Weapon_Released();
+}
+
+void ABato_Character::Input_Aim_Weapon_Pressed()
+{
+	CombatComponent->Initial_Aim_Weapon_Pressed();
+}
+
+void ABato_Character::Input_Aim_Weapon_Released()
+{
+	CombatComponent->Initial_Aim_Weapon_Released();
+}
+
+void ABato_Character::Input_Cycle_Weapon_Pressed()
+{
+	CombatComponent->Initial_Cycle_Weapon_Pressed();
+}
+
+void ABato_Character::Input_Reload_Weapon_Pressed()
+{
+	CombatComponent->Initial_Reload_Weapon_Pressed();
 }

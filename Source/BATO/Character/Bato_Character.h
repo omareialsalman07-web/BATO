@@ -36,4 +36,14 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UCombatComponent> CombatComponent;
+	
+public:
+	void Input_Fire_Weapon_Pressed();
+	void Input_Fire_Weapon_Released();
+
+	void Input_Aim_Weapon_Pressed();
+	void Input_Aim_Weapon_Released();
+
+	void Input_Cycle_Weapon_Pressed();
+	void Input_Reload_Weapon_Pressed();
 };

@@ -10,8 +10,8 @@
 #include "Math/Color.h"
 #include "Math/MathFwd.h"
 #include "UObject/ObjectPtr.h"
-#include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "BATO/Character/Bato_Character.h"
 
 void ABato_PlayerController::BeginPlay()
 {
@@ -38,6 +38,15 @@ void ABato_PlayerController::SetupInputComponent()
     BatoInputComponent->BindAction(CroutchAction, ETriggerEvent::Started, this,&ThisClass::Input_Crouch);
     BatoInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this,&ThisClass::Input_SprintStart);
      BatoInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this,&ThisClass::Input_SprintEnd);
+
+      BatoInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Started, this,&ThisClass::Input_Fire_Weapon_Pressed);
+      BatoInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Completed, this,&ThisClass::Input_Fire_Weapon_Released);
+
+      BatoInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Started, this,&ThisClass::Input_Aim_Weapon_Pressed);
+      BatoInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Completed, this,&ThisClass::Input_Aim_Weapon_Released);
+
+      BatoInputComponent->BindAction(CycleAction, ETriggerEvent::Started, this,&ThisClass::Input_Cycle_Weapon_Pressed);
+      BatoInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this,&ThisClass::Input_Reload_Weapon_Pressed);
 }
 
 void ABato_PlayerController::Input_Move(const FInputActionValue& InputActionValue)
@@ -122,5 +131,59 @@ void ABato_PlayerController::Input_SprintEnd()
     if(!ControlledCharacter->IsCrouched())
     {
         ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+    }
+}
+
+void ABato_PlayerController::Input_Fire_Weapon_Pressed()
+{
+    ABato_Character* ControlledBatoCharacter = Cast<ABato_Character>(GetCharacter());
+    if(ControlledBatoCharacter) 
+    {
+        ControlledBatoCharacter->Input_Fire_Weapon_Pressed();
+    }
+}
+
+void ABato_PlayerController::Input_Fire_Weapon_Released()
+{
+    ABato_Character* ControlledBatoCharacter = Cast<ABato_Character>(GetCharacter());
+    if(ControlledBatoCharacter) 
+    {
+        ControlledBatoCharacter->Input_Fire_Weapon_Released();
+    }
+}
+
+void ABato_PlayerController::Input_Aim_Weapon_Pressed()
+{
+    ABato_Character* ControlledBatoCharacter = Cast<ABato_Character>(GetCharacter());
+    if(ControlledBatoCharacter) 
+    {
+        ControlledBatoCharacter->Input_Aim_Weapon_Pressed();
+    }
+}
+
+void ABato_PlayerController::Input_Aim_Weapon_Released()
+{
+    ABato_Character* ControlledBatoCharacter = Cast<ABato_Character>(GetCharacter());
+    if(ControlledBatoCharacter) 
+    {
+        ControlledBatoCharacter->Input_Aim_Weapon_Released();
+    }
+}
+
+void ABato_PlayerController::Input_Cycle_Weapon_Pressed()
+{
+    ABato_Character* ControlledBatoCharacter = Cast<ABato_Character>(GetCharacter());
+    if(ControlledBatoCharacter) 
+    {
+        ControlledBatoCharacter->Input_Cycle_Weapon_Pressed();
+    }
+}
+
+void ABato_PlayerController::Input_Reload_Weapon_Pressed()
+{
+    ABato_Character* ControlledBatoCharacter = Cast<ABato_Character>(GetCharacter());
+    if(ControlledBatoCharacter) 
+    {
+        ControlledBatoCharacter->Input_Reload_Weapon_Pressed();
     }
 }
