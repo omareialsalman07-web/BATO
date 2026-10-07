@@ -36,9 +36,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> CroutchAction;
 
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float SprintSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> SprintAction;
+
 	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_Jump();
 	void Input_Crouch();
+	void Input_SprintStart();
+	void Input_SprintEnd();
 
 };

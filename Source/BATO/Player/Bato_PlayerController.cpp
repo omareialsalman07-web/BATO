@@ -36,6 +36,8 @@ void ABato_PlayerController::SetupInputComponent()
     BatoInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::Input_Look);
     BatoInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this,&ThisClass::Input_Jump);
     BatoInputComponent->BindAction(CroutchAction, ETriggerEvent::Started, this,&ThisClass::Input_Crouch);
+    BatoInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this,&ThisClass::Input_SprintStart);
+     BatoInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this,&ThisClass::Input_SprintEnd);
 }
 
 void ABato_PlayerController::Input_Move(const FInputActionValue& InputActionValue)
@@ -94,5 +96,31 @@ void ABato_PlayerController::Input_Crouch()
     else
     {
         ControlledCharacter->Crouch();
+
+        ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed; // To avoid sprinting on uncrouting (in case we crouch from sprint and we are not holding sprint key)
+    }
+}
+
+void ABato_PlayerController::Input_SprintStart()
+{
+    ACharacter* ControlledCharacter = GetCharacter();
+    if(!ControlledCharacter) return;
+
+    if(ControlledCharacter->IsCrouched())
+    {
+        ControlledCharacter->UnCrouch();
+    }
+
+    ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void ABato_PlayerController::Input_SprintEnd()
+{
+    ACharacter* ControlledCharacter = GetCharacter();
+    if(!ControlledCharacter) return;
+
+    if(!ControlledCharacter->IsCrouched())
+    {
+        ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
     }
 }
