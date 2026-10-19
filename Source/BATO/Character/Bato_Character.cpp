@@ -8,6 +8,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BATO/Componets/CombatComponent.h"
+#include "BATO/Data/WeaponData.h"
+
 
 ABato_Character::ABato_Character()
 {
@@ -47,6 +49,15 @@ void ABato_Character::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ABato_Character::PossessedBy(AController *NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if(IsValid(CombatComponent)) {
+		CombatComponent->SpawnInventory();
+	}
 }
 
 
@@ -89,4 +100,10 @@ void ABato_Character::Input_Cycle_Weapon_Pressed()
 void ABato_Character::Input_Reload_Weapon_Pressed()
 {
 	CombatComponent->Initial_Reload_Weapon_Pressed();
+}
+
+FName ABato_Character::GetWeaponAttachedPoint(const EWeaponType &WeaponType)
+{
+	checkf(CombatComponent->WeaponData, TEXT("Please fill out weapon data"));
+	return *CombatComponent->WeaponData->GripPoints.Find(WeaponType);
 }

@@ -6,12 +6,14 @@
 #include "GameFramework/Character.h"
 #include "UObject/ObjectMacros.h"
 #include "UObject/ObjectPtr.h"
+#include "BATO/Interfaces/PlayerInterface.h"
+
 #include "Bato_Character.generated.h"
 
 class UCombatComponent;
 
 UCLASS()
-class BATO_API ABato_Character : public ACharacter
+class BATO_API ABato_Character : public ACharacter, public IPlayerInterface
 {
 	GENERATED_BODY()
 
@@ -21,8 +23,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	protected:
+protected:
 	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController *NewController) override;
 
 private:
 	UPROPERTY(VisibleAnywhere)	
@@ -46,4 +49,6 @@ public:
 
 	void Input_Cycle_Weapon_Pressed();
 	void Input_Reload_Weapon_Pressed();
+
+	virtual FName GetWeaponAttachedPoint(const EWeaponType &WeaponType) override;
 };
