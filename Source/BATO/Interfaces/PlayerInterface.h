@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Components/SkeletalMeshComponent.h"
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "BATO/Weapons/WeaponType.h"
@@ -24,4 +25,9 @@ class BATO_API IPlayerInterface
 public:
 	UFUNCTION()
 	virtual FName GetWeaponAttachedPoint(const EWeaponType& WeaponType) = 0;
+	
+	UFUNCTION()
+	virtual USkeletalMeshComponent* GetMesh1P() const = 0;
+	UFUNCTION()
+	virtual USkeletalMeshComponent* GetMesh3P() const = 0;
 };

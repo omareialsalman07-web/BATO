@@ -25,6 +25,8 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	EWeaponType WeaponType;
+
+	virtual void OnRep_Owner() override;
 private:
 	
 	UPROPERTY(VisibleAnywhere)
@@ -33,8 +35,11 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Mesh3P;
 
+	void SetMeshVisisbilty() const;
+
 public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	USkeletalMeshComponent* GetMesh3P() const { return Mesh3P; }
 
+	void AttachToOwner() const; // This should be called after setup the onwing
 };

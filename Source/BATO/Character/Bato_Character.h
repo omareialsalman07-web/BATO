@@ -51,4 +51,6 @@ public:
 	void Input_Reload_Weapon_Pressed();
 
 	virtual FName GetWeaponAttachedPoint(const EWeaponType &WeaponType) override;
+	virtual USkeletalMeshComponent * GetMesh1P() const override;
+	virtual USkeletalMeshComponent * GetMesh3P() const override;
 };

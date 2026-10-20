@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/EngineTypes.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BATO/Componets/CombatComponent.h"
@@ -106,4 +107,12 @@ FName ABato_Character::GetWeaponAttachedPoint(const EWeaponType &WeaponType)
 {
 	checkf(CombatComponent->WeaponData, TEXT("Please fill out weapon data"));
 	return *CombatComponent->WeaponData->GripPoints.Find(WeaponType);
+}
+
+USkeletalMeshComponent* ABato_Character::GetMesh1P() const {
+	return Mesh1P;
+}
+
+USkeletalMeshComponent* ABato_Character::GetMesh3P() const {
+	return GetMesh();
 }

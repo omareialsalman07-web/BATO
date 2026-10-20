@@ -34,25 +34,6 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> weaponToSpawn) const
-{
-	if(!IsValid(weaponToSpawn)) return nullptr;
-
-	APawn* Owner = Cast<APawn>(GetOwner());
-	if(!IsValid(Owner)) return nullptr;
-	if(Owner->GetLocalRole() < ROLE_Authority) return nullptr; // spawn only from the server
-
-	UWorld* World = GetWorld();
-	if(!World) return nullptr;
-
-	FActorSpawnParameters SpawnInfo;
-	SpawnInfo.Instigator = Owner;
-	SpawnInfo.Owner = Owner;
-	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	return World->SpawnActor<AWeapon>(weaponToSpawn, SpawnInfo);
-}
-
 void UCombatComponent::Initial_Fire_Weapon_Pressed()
 {
 	if(GEngine)
@@ -103,11 +84,38 @@ void UCombatComponent::Initial_Reload_Weapon_Pressed()
 
 void UCombatComponent::SpawnInventory()
 {
-	AWeapon* newWeapon = SpawnWeapon(DefaultWeapon);
+	AWeapon* NewWeapon = SpawnWeapon(DefaultWeapon);
+	if(IsValid(NewWeapon))
+	{
+		NewWeapon->AttachToOwner();
+	}
 }
 
 void UCombatComponent::DestroyInventory()
 {
 	// TODO: Destroy the inventory once we have one.
+}
+
+AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> weaponToSpawn) const
+{
+	if(!IsValid(weaponToSpawn)) return nullptr;
+
+	APawn* Owner = Cast<APawn>(GetOwner());
+	if(!IsValid(Owner)) return nullptr;
+	if(Owner->GetLocalRole() < ROLE_Authority) return nullptr; // spawn only from the server
+	
+	if(GEngine){
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, "On the server");
+	}
+
+	UWorld* World = GetWorld();
+	if(!World) return nullptr;
+
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Instigator = Owner;
+	SpawnInfo.Owner = Owner;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	return World->SpawnActor<AWeapon>(weaponToSpawn, SpawnInfo);
 }
 
