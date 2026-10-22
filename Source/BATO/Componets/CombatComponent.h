@@ -24,7 +24,7 @@ class BATO_API UCombatComponent : public UActorComponent
 public:	
 	UCombatComponent();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWeaponData> WeaponData;
 	
 protected:
@@ -36,6 +36,9 @@ protected:
 
 	UFUNCTION()
 	void OnRep_CurrentWeapon(AWeapon* lastWeapon);
+
+	UPROPERTY(ReplicatedUsing = OnRep_CurrentWeapon, BlueprintReadOnly)
+	AWeapon* CurrentWeapon;
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
@@ -44,8 +47,6 @@ private:
 
 	UPROPERTY(Replicated)
 	TArray<AWeapon*> Inventory;
-	UPROPERTY(ReplicatedUsing = OnRep_CurrentWeapon)
-	AWeapon* CurrentWeapon;
 
 	void SelectItem(int inventoryItemIndex);
 

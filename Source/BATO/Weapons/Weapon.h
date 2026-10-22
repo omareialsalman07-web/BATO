@@ -24,7 +24,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EWeaponType WeaponType;
 
 	virtual void OnRep_Owner() override;

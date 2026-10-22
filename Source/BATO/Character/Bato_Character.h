@@ -27,6 +27,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController *NewController) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UCombatComponent> CombatComponent;
+	
 private:
 	UPROPERTY(VisibleAnywhere)	
 	TObjectPtr<class USkeletalMeshComponent> Mesh1P;
@@ -36,9 +39,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)	
 	TObjectPtr<class UCameraComponent> FirstPersonCamera;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UCombatComponent> CombatComponent;
 	
 public:
 	void Input_Fire_Weapon_Pressed();
