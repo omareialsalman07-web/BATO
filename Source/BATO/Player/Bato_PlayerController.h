@@ -20,6 +20,7 @@ class BATO_API ABato_PlayerController : public APlayerController
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const override;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> BatoIMC;
@@ -38,9 +39,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float WalkSpeed;
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float SprintSpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated)
+	bool bSprint;
+	UFUNCTION(Server, Reliable)
+	void Server_Sprint(bool bPressed);
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> SprintAction;
@@ -61,8 +65,10 @@ protected:
 	void Input_Look(const FInputActionValue& InputActionValue);
 	void Input_Jump();
 	void Input_Crouch();
+
 	void Input_SprintStart();
 	void Input_SprintEnd();
+	void Sprint(bool bPressed);
 
 	void Input_Fire_Weapon_Pressed();
 	void Input_Fire_Weapon_Released();

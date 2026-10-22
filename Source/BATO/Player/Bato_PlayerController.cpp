@@ -3,15 +3,18 @@
 
 #include "Bato_PlayerController.h"
 
+#include "Engine/Engine.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "InputTriggers.h"
 #include "Math/Color.h"
 #include "Math/MathFwd.h"
+#include "UObject/CoreNetTypes.h"
 #include "UObject/ObjectPtr.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BATO/Character/Bato_Character.h"
+#include "Net/UnrealNetwork.h"
 
 void ABato_PlayerController::BeginPlay()
 {
@@ -47,6 +50,18 @@ void ABato_PlayerController::SetupInputComponent()
 
       BatoInputComponent->BindAction(CycleAction, ETriggerEvent::Started, this,&ThisClass::Input_Cycle_Weapon_Pressed);
       BatoInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this,&ThisClass::Input_Reload_Weapon_Pressed);
+}
+
+void ABato_PlayerController::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const 
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME_CONDITION(ABato_PlayerController, bSprint, COND_SkipOwner);
+}
+
+void ABato_PlayerController::Server_Sprint_Implementation(bool bPressed)
+{
+    bSprint = bPressed;
 }
 
 void ABato_PlayerController::Input_Move(const FInputActionValue& InputActionValue)
@@ -112,25 +127,41 @@ void ABato_PlayerController::Input_Crouch()
 
 void ABato_PlayerController::Input_SprintStart()
 {
-    ACharacter* ControlledCharacter = GetCharacter();
-    if(!ControlledCharacter) return;
-
-    if(ControlledCharacter->IsCrouched())
-    {
-        ControlledCharacter->UnCrouch();
-    }
-
-    ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+    Sprint(true);
+    Server_Sprint(true);
 }
 
 void ABato_PlayerController::Input_SprintEnd()
 {
-    ACharacter* ControlledCharacter = GetCharacter();
-    if(!ControlledCharacter) return;
+    Sprint(false);
+    Server_Sprint(false);
+}
 
-    if(!ControlledCharacter->IsCrouched())
+void ABato_PlayerController::Sprint(bool bPressed)
+{
+    bSprint = bPressed;
+
+    if(bSprint)
     {
-        ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+        ACharacter* ControlledCharacter = GetCharacter();
+        if(!ControlledCharacter) return;
+        
+        if(ControlledCharacter->IsCrouched())
+        {
+            ControlledCharacter->UnCrouch();
+        }
+    
+        ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+    }
+    else 
+    {
+        ACharacter* ControlledCharacter = GetCharacter();
+        if(!ControlledCharacter) return;
+
+        if(!ControlledCharacter->IsCrouched())
+        {
+            ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+        }
     }
 }
 
