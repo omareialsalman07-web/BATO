@@ -3,9 +3,14 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "BATO/Interfaces/PlayerInterface.h"
+#include "CoreGlobals.h"
 #include "GameFramework/Pawn.h"
+#include "Logging/LogMacros.h"
+#include "Logging/LogVerbosity.h"
 #include "Templates/Casts.h"
 #include "UObject/Linker.h"
+#include "UObject/Object.h"
+#include "UObject/UObjectBaseUtility.h"
 
 AWeapon::AWeapon()
 {
@@ -24,12 +29,15 @@ AWeapon::AWeapon()
 	Mesh3P->CastShadow = true;
 	Mesh3P->bReceivesDecals = false;
 	Mesh3P->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
+
+	Mesh1P->SetHiddenInGame(true);
+	Mesh3P->SetHiddenInGame(true);
 }
 
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void AWeapon::Tick(float DeltaTime)
@@ -41,12 +49,13 @@ void AWeapon::Tick(float DeltaTime)
 void AWeapon::OnRep_Owner()
 {
 	Super::OnRep_Owner();
-	AttachToOwner();
+
+	//AttachToOwner();
 }
 
-void AWeapon::SetMeshVisisbilty() const
+void AWeapon::SetMeshVisibilities(APawn* OwningPawn) const
 {
-	if(GetInstigator()->IsLocallyControlled())
+	if (OwningPawn->IsLocallyControlled())
 	{
 		Mesh1P->SetHiddenInGame(false);
 		Mesh3P->SetHiddenInGame(true);
@@ -60,14 +69,25 @@ void AWeapon::SetMeshVisisbilty() const
 
 void AWeapon::AttachToOwner() const
 {
-	APawn* OwningPawn = GetInstigator();
-	if(!IsValid(OwningPawn) || !OwningPawn->Implements<UPlayerInterface>()) return;
+	UE_LOG(LogTemp, Warning,
+			TEXT("OnAttaching | Weapon=%s | Role=%s | Owner=%s"),
+			*GetNameSafe(this),
+			*UEnum::GetValueAsString(GetLocalRole()),
+			*GetNameSafe(GetOwner()));
 
-	SetMeshVisisbilty();
+	APawn* OwningPawn = Cast<APawn>(GetOwner());
+	if (!IsValid(OwningPawn) || !OwningPawn->Implements<UPlayerInterface>()) return;
+	
+	SetMeshVisibilities(OwningPawn);
+	
 	IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(OwningPawn);
+	if(!PlayerInterface) return;
 
-	FName GripPoint = PlayerInterface->GetWeaponAttachedPoint(WeaponType);
-	Mesh1P->AttachToComponent(PlayerInterface->GetMesh1P(),  FAttachmentTransformRules::KeepRelativeTransform, GripPoint);
-	Mesh3P->AttachToComponent(PlayerInterface->GetMesh3P(),  FAttachmentTransformRules::KeepRelativeTransform, GripPoint);
+	const FName AttachPoint = PlayerInterface->GetWeaponAttachedPoint(WeaponType);
+	USkeletalMeshComponent* PawnMesh1P = PlayerInterface->GetMesh1P();
+	USkeletalMeshComponent* PawnMesh3P = PlayerInterface->GetMesh3P();
+	
+	Mesh1P->AttachToComponent(PawnMesh1P, FAttachmentTransformRules::KeepRelativeTransform, AttachPoint);
+	Mesh3P->AttachToComponent(PawnMesh3P, FAttachmentTransformRules::KeepRelativeTransform, AttachPoint);
 
 }

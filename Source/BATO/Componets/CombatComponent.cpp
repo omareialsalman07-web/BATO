@@ -7,8 +7,13 @@
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
+#include "Logging/LogMacros.h"
+#include "Logging/LogVerbosity.h"
 #include "Templates/Casts.h"
+#include "Templates/SubclassOf.h"
 #include "UObject/Object.h"
+#include "Net/UnrealNetwork.h"
+#include "UObject/UObjectBaseUtility.h"
 
 UCombatComponent::UCombatComponent()
 {
@@ -32,6 +37,27 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const 
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UCombatComponent, Inventory);
+	DOREPLIFETIME(UCombatComponent, CurrentWeapon);
+}
+
+void UCombatComponent::OnRep_CurrentWeapon(AWeapon* lastWeapon)
+{
+	if(IsValid(CurrentWeapon))
+	{	
+		if(!IsValid(CurrentWeapon->GetOwner()))
+		{
+			CurrentWeapon->SetOwner(GetOwner());
+		}
+
+		CurrentWeapon->AttachToOwner();
+	}
 }
 
 void UCombatComponent::Initial_Fire_Weapon_Pressed()
@@ -84,11 +110,15 @@ void UCombatComponent::Initial_Reload_Weapon_Pressed()
 
 void UCombatComponent::SpawnInventory()
 {
-	AWeapon* NewWeapon = SpawnWeapon(DefaultWeapon);
-	if(IsValid(NewWeapon))
+	if(GetOwner()->GetLocalRole() < ROLE_Authority) return;
+
+	for(const TSubclassOf<AWeapon>& weaponClass : DefaultWeapons) 
 	{
-		NewWeapon->AttachToOwner();
+		AWeapon* WeaponToSpawn = SpawnWeapon(weaponClass);
+		Inventory.AddUnique(WeaponToSpawn);
 	}
+
+	SelectItem(0);
 }
 
 void UCombatComponent::DestroyInventory()
@@ -100,22 +130,25 @@ AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> weaponToSpawn) const
 {
 	if(!IsValid(weaponToSpawn)) return nullptr;
 
-	APawn* Owner = Cast<APawn>(GetOwner());
-	if(!IsValid(Owner)) return nullptr;
-	if(Owner->GetLocalRole() < ROLE_Authority) return nullptr; // spawn only from the server
+	AActor* OwningActor = GetOwner();
+	if (!IsValid(OwningActor)) return nullptr;
+	if (OwningActor->GetLocalRole() < ROLE_Authority) return nullptr;
 	
-	if(GEngine){
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, "On the server");
-	}
-
-	UWorld* World = GetWorld();
-	if(!World) return nullptr;
-
 	FActorSpawnParameters SpawnInfo;
-	SpawnInfo.Instigator = Owner;
-	SpawnInfo.Owner = Owner;
+	SpawnInfo.Instigator = Cast<APawn>(OwningActor);
+	SpawnInfo.Owner = OwningActor;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	return GetWorld()->SpawnActor<AWeapon>(weaponToSpawn, SpawnInfo);
+}
 
-	return World->SpawnActor<AWeapon>(weaponToSpawn, SpawnInfo);
+void UCombatComponent::SelectItem(int inventoryItemIndex)
+{
+	inventoryItemIndex = inventoryItemIndex % 1; // to make from 0 to 1
+	if(Inventory.Num() > inventoryItemIndex)
+	{
+		CurrentWeapon = Inventory[inventoryItemIndex];
+		CurrentWeapon->AttachToOwner();
+	}
 }
 

@@ -35,7 +35,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Mesh3P;
 
-	void SetMeshVisisbilty() const;
+	void SetMeshVisibilities(APawn* OwningPawn) const;
 
 public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
