@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
+#include "GameFramework/Pawn.h"
 #include "UObject/ObjectMacros.h"
 #include "UObject/ObjectPtr.h"
 #include "WeaponType.h"
@@ -41,5 +42,5 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	USkeletalMeshComponent* GetMesh3P() const { return Mesh3P; }
 
-	void AttachToOwner() const; // This should be called after setup the onwing
+	void AttachToCharacter(AActor* Character) const;
 };

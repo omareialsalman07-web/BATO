@@ -1,6 +1,7 @@
 
 #include "CombatComponent.h"
 #include "BATO/Weapons/Weapon.h"
+#include "CoreGlobals.h"
 #include "Engine/Engine.h"
 #include "BATO/Data/WeaponData.h"
 #include "Engine/EngineTypes.h"
@@ -48,15 +49,9 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out
 }
 
 void UCombatComponent::OnRep_CurrentWeapon(AWeapon* lastWeapon)
-{
+{	
 	if(!IsValid(CurrentWeapon)) return;
-	
-	if(!IsValid(CurrentWeapon->GetOwner()))
-	{
-		CurrentWeapon->SetOwner(GetOwner());
-	}
-	
-	CurrentWeapon->AttachToOwner();
+	CurrentWeapon->AttachToCharacter(GetOwner());
 }
 
 void UCombatComponent::Initial_Fire_Weapon_Pressed()
@@ -147,7 +142,7 @@ void UCombatComponent::SelectItem(int inventoryItemIndex)
 	if(Inventory.Num() > inventoryItemIndex)
 	{
 		CurrentWeapon = Inventory[inventoryItemIndex];
-		CurrentWeapon->AttachToOwner();
+		CurrentWeapon->AttachToCharacter(GetOwner());
 	}
 }
 

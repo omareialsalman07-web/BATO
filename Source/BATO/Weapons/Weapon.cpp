@@ -4,6 +4,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "BATO/Interfaces/PlayerInterface.h"
 #include "CoreGlobals.h"
+#include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
 #include "Logging/LogMacros.h"
 #include "Logging/LogVerbosity.h"
@@ -51,6 +52,7 @@ void AWeapon::OnRep_Owner()
 	Super::OnRep_Owner();
 
 	//AttachToOwner();
+	/*UE_LOG(LogTemp, Warning, TEXT("Owner Rep | New Owner: %s"), *GetNameSafe(GetInstigator()));*/
 }
 
 void AWeapon::SetMeshVisibilities(APawn* OwningPawn) const
@@ -67,20 +69,14 @@ void AWeapon::SetMeshVisibilities(APawn* OwningPawn) const
 	}
 }
 
-void AWeapon::AttachToOwner() const
+void AWeapon::AttachToCharacter(AActor* Character) const
 {
-	UE_LOG(LogTemp, Warning,
-			TEXT("OnAttaching | Weapon=%s | Role=%s | Owner=%s"),
-			*GetNameSafe(this),
-			*UEnum::GetValueAsString(GetLocalRole()),
-			*GetNameSafe(GetOwner()));
-
-	APawn* OwningPawn = Cast<APawn>(GetOwner());
-	if (!IsValid(OwningPawn) || !OwningPawn->Implements<UPlayerInterface>()) return;
+	APawn* CharacterPawn = Cast<APawn>(Character);
+	if (!IsValid(CharacterPawn) || !CharacterPawn->Implements<UPlayerInterface>()) return;
 	
-	SetMeshVisibilities(OwningPawn);
+	SetMeshVisibilities(CharacterPawn);
 	
-	IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(OwningPawn);
+	IPlayerInterface* PlayerInterface = Cast<IPlayerInterface>(CharacterPawn);
 	if(!PlayerInterface) return;
 
 	const FName AttachPoint = PlayerInterface->GetWeaponAttachedPoint(WeaponType);
