@@ -49,15 +49,14 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out
 
 void UCombatComponent::OnRep_CurrentWeapon(AWeapon* lastWeapon)
 {
-	if(IsValid(CurrentWeapon))
-	{	
-		if(!IsValid(CurrentWeapon->GetOwner()))
-		{
-			CurrentWeapon->SetOwner(GetOwner());
-		}
-
-		CurrentWeapon->AttachToOwner();
+	if(!IsValid(CurrentWeapon)) return;
+	
+	if(!IsValid(CurrentWeapon->GetOwner()))
+	{
+		CurrentWeapon->SetOwner(GetOwner());
 	}
+	
+	CurrentWeapon->AttachToOwner();
 }
 
 void UCombatComponent::Initial_Fire_Weapon_Pressed()
