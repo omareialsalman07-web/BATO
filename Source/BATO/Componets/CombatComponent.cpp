@@ -118,6 +118,11 @@ void UCombatComponent::DestroyInventory()
 	// TODO: Destroy the inventory once we have one.
 }
 
+const AWeapon* UCombatComponent::GetCurrentWeapon() const
+{
+	return CurrentWeapon;
+}
+
 AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> weaponToSpawn) const
 {
 	if(!IsValid(weaponToSpawn)) return nullptr;

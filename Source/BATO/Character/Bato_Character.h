@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Math/MathFwd.h"
 #include "UObject/ObjectMacros.h"
 #include "UObject/ObjectPtr.h"
 #include "BATO/Interfaces/PlayerInterface.h"
@@ -46,6 +47,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAim(bool bAim);
+
+	UPROPERTY(BlueprintReadOnly)
+	FTransform FABRIK_SocketTransform;
 public:
 	void Input_Fire_Weapon_Pressed();
 	void Input_Fire_Weapon_Released();
@@ -62,4 +66,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetFixedAO_Pitch() const;
+
+	UFUNCTION(BlueprintCallable)
+	const FTransform& Get_FABRIK_SocketTransform() const;
+private:
+	void _CalculateFabrik_SocketTransform();
 };

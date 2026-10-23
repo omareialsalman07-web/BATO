@@ -4,11 +4,13 @@
 #include "Bato_Character.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/SceneComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/EngineTypes.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BATO/Componets/CombatComponent.h"
+#include "BATO/Weapons/Weapon.h"
 #include "BATO/Data/WeaponData.h"
 #include "Net/UnrealNetwork.h"
 #include "UObject/CoreNetTypes.h"
@@ -68,6 +70,27 @@ void ABato_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
+	_CalculateFabrik_SocketTransform();
+}
+
+
+void ABato_Character::_CalculateFabrik_SocketTransform()
+{
+    if (!IsValid(CombatComponent)
+        || !IsValid(CombatComponent->GetCurrentWeapon())
+        || !IsValid(CombatComponent->GetCurrentWeapon()->GetMesh3P()))
+    {
+        return;
+    }
+
+	FABRIK_SocketTransform = CombatComponent->GetCurrentWeapon()->GetMesh3P()->GetSocketTransform("FABRIK_Socket", RTS_World);
+
+	FVector OutPosition;
+	FRotator OutRotation;
+	GetMesh()->TransformToBoneSpace("hand_r", FABRIK_SocketTransform.GetLocation(), FABRIK_SocketTransform.GetRotation().Rotator(), OutPosition, OutRotation);
+	
+	FABRIK_SocketTransform.SetLocation(OutPosition);
+	FABRIK_SocketTransform.SetRotation(OutRotation.Quaternion());
 }
 
 void ABato_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -123,6 +146,11 @@ float ABato_Character::GetFixedAO_Pitch() const
 	}
 
 	return ao_Pitch;
+}
+
+const FTransform& ABato_Character::Get_FABRIK_SocketTransform() const
+{
+	return FABRIK_SocketTransform;
 }
 
 USkeletalMeshComponent* ABato_Character::GetMesh1P() const {

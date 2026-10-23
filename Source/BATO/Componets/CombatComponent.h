@@ -69,4 +69,6 @@ public:
 
 	void SpawnInventory();
 	void DestroyInventory();
+
+	const AWeapon* GetCurrentWeapon() const;
 };
