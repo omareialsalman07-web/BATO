@@ -59,4 +59,7 @@ public:
 	virtual FName GetWeaponAttachedPoint(const EWeaponType &WeaponType) override;
 	virtual USkeletalMeshComponent * GetMesh1P() const override;
 	virtual USkeletalMeshComponent * GetMesh3P() const override;
+
+	UFUNCTION(BlueprintCallable)
+	float GetFixedAO_Pitch() const;
 };

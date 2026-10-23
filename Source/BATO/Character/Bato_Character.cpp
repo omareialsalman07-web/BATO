@@ -114,6 +114,17 @@ FName ABato_Character::GetWeaponAttachedPoint(const EWeaponType &WeaponType)
 	return *CombatComponent->WeaponData->GripPoints.Find(WeaponType);
 }
 
+float ABato_Character::GetFixedAO_Pitch() const
+{
+	float ao_Pitch = GetBaseAimRotation().Pitch;
+	if(ao_Pitch > 90.f && !IsLocallyControlled()) // fix the mapping from [270, 360] to [-90, 0] because that happen when comprissing aim rotation for optimization for unreal
+	{
+		ao_Pitch -= 360;
+	}
+
+	return ao_Pitch;
+}
+
 USkeletalMeshComponent* ABato_Character::GetMesh1P() const {
 	return Mesh1P;
 }
