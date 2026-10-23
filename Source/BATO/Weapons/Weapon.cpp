@@ -33,6 +33,8 @@ AWeapon::AWeapon()
 
 	Mesh1P->SetHiddenInGame(true);
 	Mesh3P->SetHiddenInGame(true);
+
+	AimFieldOfView = 65.0f;
 }
 
 void AWeapon::BeginPlay()

@@ -39,6 +39,12 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_CurrentWeapon, BlueprintReadOnly)
 	AWeapon* CurrentWeapon;
+
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	bool bAim;
+	UFUNCTION(Server, Reliable)
+	void Server_Aim(bool bPressed);
+
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
@@ -50,6 +56,7 @@ private:
 
 	void SelectItem(int inventoryItemIndex);
 
+	void LocalAim(bool bPressed);
 public:	
 	void Initial_Fire_Weapon_Pressed();
 	void Initial_Fire_Weapon_Released();

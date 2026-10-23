@@ -1,5 +1,6 @@
 
 #include "CombatComponent.h"
+#include "BATO/Componets/CombatComponent.h"
 #include "BATO/Weapons/Weapon.h"
 #include "CoreGlobals.h"
 #include "Engine/Engine.h"
@@ -46,6 +47,7 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out
 
 	DOREPLIFETIME(UCombatComponent, Inventory);
 	DOREPLIFETIME(UCombatComponent, CurrentWeapon);
+	DOREPLIFETIME_CONDITION(UCombatComponent, bAim, COND_SkipOwner);
 }
 
 void UCombatComponent::OnRep_CurrentWeapon(AWeapon* lastWeapon)
@@ -72,18 +74,14 @@ void UCombatComponent::Initial_Fire_Weapon_Released()
 
 void UCombatComponent::Initial_Aim_Weapon_Pressed()
 {
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Black, "Aim Weapon Pressed", false);
-	}
+	LocalAim(true);
+	Server_Aim(true);
 }
 
 void UCombatComponent::Initial_Aim_Weapon_Released()
 {
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Black, "Aim Weapon Released", false);
-	}
+	LocalAim(false);
+	Server_Aim(false);
 }
 
 void UCombatComponent::Initial_Cycle_Weapon_Pressed()
@@ -144,5 +142,15 @@ void UCombatComponent::SelectItem(int inventoryItemIndex)
 		CurrentWeapon = Inventory[inventoryItemIndex];
 		CurrentWeapon->AttachToCharacter(GetOwner());
 	}
+}
+
+void UCombatComponent::Server_Aim_Implementation(bool bPressed)
+{
+	bAim = bPressed;
+}
+
+void UCombatComponent::LocalAim(bool bPressed)
+{
+	bAim = bPressed;
 }
 

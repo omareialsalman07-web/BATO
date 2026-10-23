@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BATO/Componets/CombatComponent.h"
 #include "BATO/Data/WeaponData.h"
+#include "Net/UnrealNetwork.h"
+#include "UObject/CoreNetTypes.h"
 
 
 ABato_Character::ABato_Character()
@@ -28,6 +30,7 @@ ABato_Character::ABato_Character()
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>("FirstPersonCamera");
 	FirstPersonCamera->SetupAttachment(SpringArm);
 	FirstPersonCamera->bUsePawnControlRotation = false;
+	DefaultFieldOfView = 90.0f;
 
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh1P");
 	Mesh1P->SetupAttachment(FirstPersonCamera);
@@ -61,7 +64,6 @@ void ABato_Character::PossessedBy(AController *NewController)
 	}
 }
 
-
 void ABato_Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -86,11 +88,13 @@ void ABato_Character::Input_Fire_Weapon_Released()
 void ABato_Character::Input_Aim_Weapon_Pressed()
 {
 	CombatComponent->Initial_Aim_Weapon_Pressed();
+	OnAim(true);
 }
 
 void ABato_Character::Input_Aim_Weapon_Released()
 {
 	CombatComponent->Initial_Aim_Weapon_Released();
+	OnAim(false);
 }
 
 void ABato_Character::Input_Cycle_Weapon_Pressed()
@@ -101,6 +105,7 @@ void ABato_Character::Input_Cycle_Weapon_Pressed()
 void ABato_Character::Input_Reload_Weapon_Pressed()
 {
 	CombatComponent->Initial_Reload_Weapon_Pressed();
+
 }
 
 FName ABato_Character::GetWeaponAttachedPoint(const EWeaponType &WeaponType)

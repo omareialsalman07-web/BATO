@@ -37,9 +37,15 @@ private:
 	UPROPERTY(VisibleAnywhere)	
 	TObjectPtr<class USpringArmComponent> SpringArm;
 
-	UPROPERTY(VisibleAnywhere)	
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)	
 	TObjectPtr<class UCameraComponent> FirstPersonCamera;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float DefaultFieldOfView;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAim(bool bAim);
 public:
 	void Input_Fire_Weapon_Pressed();
 	void Input_Fire_Weapon_Released();

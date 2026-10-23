@@ -28,6 +28,9 @@ protected:
 	EWeaponType WeaponType;
 
 	virtual void OnRep_Owner() override;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon|Aim")
+	float AimFieldOfView;
 private:
 	
 	UPROPERTY(VisibleAnywhere)
@@ -37,10 +40,12 @@ private:
 	TObjectPtr<USkeletalMeshComponent> Mesh3P;
 
 	void SetMeshVisibilities(APawn* OwningPawn) const;
-
 public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	USkeletalMeshComponent* GetMesh3P() const { return Mesh3P; }
 
 	void AttachToCharacter(AActor* Character) const;
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetAimFOV() const { return AimFieldOfView; }
 };
