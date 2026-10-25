@@ -71,4 +71,9 @@ public:
 	void DestroyInventory();
 
 	const AWeapon* GetCurrentWeapon() const;
+	
+	UFUNCTION(BlueprintCallable)
+	bool HasCurrentWeapon() const;
+
+	bool GetIsAim() const;
 };

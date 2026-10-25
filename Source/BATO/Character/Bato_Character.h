@@ -64,6 +64,8 @@ public:
 	virtual USkeletalMeshComponent * GetMesh1P() const override;
 	virtual USkeletalMeshComponent * GetMesh3P() const override;
 
+	const TObjectPtr<UCombatComponent> GetCombatComponent() const;
+
 	UFUNCTION(BlueprintCallable)
 	float GetFixedAO_Pitch() const;
 

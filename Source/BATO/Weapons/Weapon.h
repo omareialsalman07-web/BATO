@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BATO/Weapons/WeaponType.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
@@ -45,6 +46,8 @@ public:
 	const USkeletalMeshComponent* GetMesh3P() const { return Mesh3P; }
 
 	void AttachToCharacter(AActor* Character) const;
+
+	EWeaponType GetWeaponType() const;
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetAimFOV() const { return AimFieldOfView; }

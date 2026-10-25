@@ -89,3 +89,8 @@ void AWeapon::AttachToCharacter(AActor* Character) const
 	Mesh3P->AttachToComponent(PawnMesh3P, FAttachmentTransformRules::KeepRelativeTransform, AttachPoint);
 
 }
+
+EWeaponType AWeapon::GetWeaponType() const
+{
+	return WeaponType;
+}

@@ -123,6 +123,16 @@ const AWeapon* UCombatComponent::GetCurrentWeapon() const
 	return CurrentWeapon;
 }
 
+bool UCombatComponent::HasCurrentWeapon() const
+{
+	return CurrentWeapon != nullptr;
+}
+
+bool UCombatComponent::GetIsAim() const
+{
+	return bAim;
+}
+
 AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> weaponToSpawn) const
 {
 	if(!IsValid(weaponToSpawn)) return nullptr;

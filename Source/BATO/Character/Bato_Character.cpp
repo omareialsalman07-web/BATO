@@ -137,6 +137,11 @@ FName ABato_Character::GetWeaponAttachedPoint(const EWeaponType &WeaponType)
 	return *CombatComponent->WeaponData->GripPoints.Find(WeaponType);
 }
 
+const TObjectPtr<UCombatComponent> ABato_Character::GetCombatComponent() const
+{
+	return CombatComponent;
+}
+
 float ABato_Character::GetFixedAO_Pitch() const
 {
 	float ao_Pitch = GetBaseAimRotation().Pitch;
